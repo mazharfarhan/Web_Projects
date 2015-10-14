@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>XMLInputPage</title>  
+<style>
+input[type=text]{
+
+    width:150px;
+    margin-left: 50px;
+}
+
+input[type=button]{
+    margin-left: 80px;
+}
+
+.PageDiv{
+   margin-left: auto;
+   margin-bottom:auto;
+   width: 800px;
+   height: 500px;
+   margin-top: 250px; 
+}
+</style>     
+
+<script>
+function loadxml(xmlurl) {
+
+if (window.XMLHttpRequest)
+{
+// code for IE7+, Firefox, Chrome, Opera, Safari
+xmlhttp=new XMLHttpRequest();
+}
+else
+{
+// code for IE6, IE5
+xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+}    
+
+xmlhttp.open("GET",xmlurl,false);   
+
+try{
+xmlhttp.send();    
+if (xmlhttp.status == 404 ) 
+    alert("The xml file does not exist");
+}
+catch (e) {
+ alert("The xml file does not exist");
+}   
+xmlDoc = xmlhttp.responseXML;
+
+if (xmlDoc.documentElement.nodeName == "parsererror") {    
+      alert("Error in xml file"); 
+}
+else {
+   return xmlDoc;   
+}
+}
+</script>
+</head>
+
+<body>
+
+<div class="PageDiv">
+<p> Enter URL for Company List XML File </p>
+<input type="text" id="xmltext"/> <br><br>
+<input type="button" value="Submit Query" id="submit" onclick="geturl()"/>   
+</div>
+    
+<script type="text/javascript">    
+    
+window.onload = function () {
+    var textbox = document.getElementById("xmltext");
+    textbox.value = null;
+};
+    
+    
+function geturl() { 
+xmlurl = document.getElementById("xmltext").value;   // Get the xml url from the textbox
+
+if( xmlurl.length < 1 ) {                            //Condition to check if the textbox is empty.
+     window.alert("The Textbox is Empty!!");
+     return false;
+}
+
+xmlDoc = loadxml( xmlurl);                             
+    
+var datatag = xmlDoc.getElementsByTagName("Data");     //Get the header values 
+Headervalues = new Array(datatag.length);    
+htmltext = "<html><head><title>Network Table</title><style>table { width:100% } </style></head><body><table border=\"2px\"<tr>";
+ 
+networktag = xmlDoc.getElementsByTagName("Network");
+console.log(networktag);
+ 
+flag = 1;    
+
+for(var i=0;i<datatag.length;i++)  {
+   
+    if( networktag.length == 0 ) {
+       alert("No network companies in the xml");
+       flag = 0;
+       break;    
+    }
+    else {
+    Headervalues[i] = datatag[i].childNodes[0].nodeValue;
+    htmltext +="<th>" + Headervalues[i] + "</th>";    
+    }
+}
+htmltext +="</tr>";
+
+rowtag = xmlDoc.getElementsByTagName("Row");            //Get the row tag
+headertags = ["Network","Owner","Feeds","Notes","HomePage","Logo"];       
+    
+for(var i=0; i < rowtag.length; i++) {                    //Iterate for every row in the xml document.
+    htmltext += "<tr>"     
+    
+    
+     for(var j=0,k=0; j<rowtag[i].childNodes.length,k<headertags.length;j++){
+      
+        if ( rowtag[i].childNodes[j].nodeType == 1) {
+           
+            var content = xmlDoc.getElementsByTagName(headertags[k]);                        
+            
+            try{
+            contentvalue = content[i].childNodes[0].nodeValue;   
+            }
+            
+            catch(e) {
+               contentvalue =" ";    
+            }
+            
+            if( k == 2) {
+               contentvalue += "<ul>";
+               for (var l=0; l < content[i].childNodes.length;l++) {
+                
+                   if ( content[i].childNodes[l].nodeType == 1 ) {
+                       var listitem = content[i].childNodes[l].textContent;
+                       if ( ! listitem.length || listitem ==" ") {
+                                
+                           contentvalue += ""; 
+                       }
+                       else {
+                       contentvalue += "<li>" +listitem + "</li>"; 
+                       }
+                   }
+               }
+            
+               contentvalue += "</ul>";
+            }
+            if (k == 4) {
+                var htmllink = "<a href="+contentvalue+" target=_blank>"+contentvalue+"</a>";
+                contentvalue = htmllink;
+                
+            }
+            if (k == 5) {
+                
+                
+                if ( contentvalue.length != 1 ) {
+                var imglink = "<img src="+contentvalue+">";    
+                contentvalue = imglink;
+                }
+            }
+            
+             htmltext +="<td>" + contentvalue + "</td>";  
+             k++;
+          
+       }
+    }
+    htmltext += "</tr>";
+}
+  
+htmltext += "</table>";
+   
+windowspec = "height=800, width=1000, scrollbars=yes, fullscreen=yes";    
+if (flag == 1) {
+hwin= window.open("","Assignment4",windowspec);    
+hwin.document.write(htmltext);  
+}
+}
+</script>
+<noscript>    
+</body>    
+</html>    
