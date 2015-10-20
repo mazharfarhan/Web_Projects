@@ -1,0 +1,3 @@
+Transfer the forecast.php on a web server for processing. 
+
+Copy it to the Apache web server/htdocs location and call the php file for Apache to process it.
