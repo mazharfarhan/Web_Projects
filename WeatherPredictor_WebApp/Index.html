@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<title> BootStrap </title>   
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content="IE=Edge">
+<meta name="viewport" content="width=device-width , initital-scale=1.0">
+   
+   
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<link rel="stylesheet" href="css/style.css"> 
+    
+<script src="http://openlayers.org/api/OpenLayers.js"></script>
+<script src= "http://svn.osgeo.org/metacrs/proj4js/trunk/lib/proj4js-combined.js"></script>     
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<!-- Latest compiled JavaScript -->
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.14.0/jquery.validate.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>   
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.4.1/moment-timezone-with-data.min.js"></script>    
+<script src="//connect.facebook.net/en_US/all.js"></script>    
+<script src="js/validate.js"></script>    
+<script>    
+    
+function resetform() {    
+    $("#searchform")[0].reset(); 
+    $("#resultsec").html("");
+    
+    $("#resultsec").empty();
+
+}
+    
+</script>
+     
+</head>
+    
+<body class="container bg">  
+      
+<div class="row">
+    <h1 style="margin-top:25px" class="text-center">Forecast Search</h1>
+    <br/> <br/>
+    
+<div class="maindiv col-xs-10 col-xs-push-1 col-sm-12 col-sm-push-0 col-md-12">
+
+    <form id="searchform">   
+        <section class="col-lg-3">
+        <label for="inpstreet">Street Adress:<span class="star">*</span></label>
+        <input class="form-control" type="text" name="street" id="inpstreet" placeholder="Enter Street Address"/>  
+        </section>
+        
+        <section id="city" class="col-lg-2 ">
+        <label for="inpcity">City:<span class="star">*</span></label>
+        <input class="form-control" type="text" name="city" id="inpcity" placeholder="Enter the city name"/>
+        </section>
+          
+        <section class="col-lg-2 dropdown">    
+        <label for="inpstate">State:<span class="star">*</span></label>
+        <select class="form-control" name="state" id="inpstate">   
+                <option value=""> Select your state </option>
+                <option value="AL">Alabama</option>
+                <option value="AK">Alaska</option>
+                <option value="AZ">Arizona</option>
+                <option value="AR">Arkansas</option>
+                <option value="CA">California</option>
+                <option value="CO">Colorado</option>
+                <option value="CT">Connecticut</option>
+                <option value="DE">Delaware</option>
+                <option value="DC">District Of Columbia</option>
+                <option value="FL">Florida</option>
+                <option value="GA">Georgia</option>
+                <option value="HI">Hawaii</option>
+                <option value="ID">Idaho</option>
+                <option value="IL">Illinois</option>
+                <option value="IN">Indiana</option>
+                <option value="IA">Iowa</option>
+                <option value="KS">Kansas</option>
+                <option value="KY">Kentucky</option>
+                <option value="LA">Louisiana</option>
+                <option value="ME">Maine</option>
+                <option value="MD">Maryland</option>
+                <option value="MA">Massachusetts</option>
+                <option value="MI">Michigan</option>
+                <option value="MN">Minnesota</option>
+                <option value="MS">Mississippi</option>
+                <option value="MO">Missouri</option>
+                <option value="MT">Montana</option>
+                <option value="NE">Nebraska</option>
+                <option value="NV">Nevada</option>
+                <option value="NH">New Hampshire</option>
+                <option value="NJ">New Jersey</option>
+                <option value="NM">New Mexico</option>
+                <option value="NY">New York</option>
+                <option value="NC">North Carolina</option>
+                <option value="ND">North Dakota</option>
+                <option value="OH">Ohio</option>
+                <option value="OK">Oklahoma</option>
+                <option value="OR">Oregon</option>
+                <option value="PA">Pennsylvania</option>
+                <option value="RI">Rhode Island</option>
+                <option value="SC">South Carolina</option>
+                <option value="SD">South Dakota</option>
+                <option value="TN">Tennessee</option>
+                <option value="TX">Texas</option>
+                <option value="UT">Utah</option>
+                <option value="VT">Vermont</option>
+                <option value="VA">Virginia</option>
+                <option value="WA">Washington</option>
+                <option value="WV">West Virginia</option>
+                <option value="WI">Wisconsin</option>
+                <option value="WY">Wyoming</option>
+     </select> 
+        </section>
+        
+       <section class="col-lg-3">   
+       <label class="degree">Degree:<span class="star">*</span></label> <br/>
+       <input type="radio" name="degree" value="Fahrenheit" checked> Fahrenheit</input> &nbsp;    
+       <input type="radio" name="degree" value="Celsius"> Celsius</input>  
+       </section>
+    
+       <section class="col-lg-2 pull-right" style="margin-top:15px;">
+        <button style='margin-left:20px' type="submit" class="btn btn-primary btn-sm " id="searchbtn" name="search" value="search"><span class="glyphicon glyphicon-search"></span> Search</button>  
+       <button type="reset" class="btn btn-default btn-sm col-xs-push-4" id="rest" name="clear" onclick="resetform()"><span class="glyphicon glyphicon-refresh"> Clear</button><br>   
+           <label style="font-size:11px;margin-top:15px">Powered By: <a href="http://forecast.io" target="_blank"><img src="images/forecast_logo.png" class="img-responsive" width="100px" style="margin-top:-15px"/></a></label>
+         </section>    
+   </form>
+   </div>
+    
+</div> 
+ 
+<script>    
+   
+        window.fbAsyncInit = function() {
+                FB.init({
+                appId: '535136233316210',
+                cookie : true, // enable cookies to allow the server to access the session
+                xfbml  : true  // parse XFBML
+            });
+            
+              
+            
+        };    
+  
+    
+    
+var htmldata="";
+htmldata += "<div class='ol-xs-12 col-sm-12 col-sm-push-0'>   ";
+htmldata += "<br> <ul class='nav nav-tabs' role='tablist'>";
+htmldata += "<li role='presentation'><a href='#tab1' role='tab' data-toggle='tab' class='active'><label>Right Now<\/label><\/a><\/li>";
+htmldata += "<li role='presentation'><a href='#tab2' role='tab' data-toggle='tab'><label>Next 24 Hours<\/label><\/a><\/li>  ";
+htmldata += "<li role='presentation'><a href='#tab3' role='tab' data-toggle='tab'><label>Next 7 Days<\/label><\/a><\/li>     ";
+htmldata += "<\/ul>     ";
+htmldata += "    ";
+htmldata += "<div class='tab-content'>  ";
+htmldata += "<div class='tab-pane active' id='tab1'>  ";
+htmldata += "<section class='col-lg-7' style='padding:0px;'>   ";
+htmldata += "<div id='firsttable' >    ";
+htmldata += "    ";
+htmldata += "   <section style='background-color:LightCoral;background-size:cover;'>";
+htmldata += "        ";
+htmldata += "        <img id='weathericon' src='' title='' class='img-responsive pull-left col-xs-offset-3 col-sm-offset-1' \/> ";
+htmldata += "";
+htmldata += "        <label id='infotext' class='col-xs-offset-3 col-sm-offset-3'><\/label> ";
+htmldata += "";
+htmldata += "        <label class='col-xs-offset-4 col-sm-offset-4'><span id='temp' style='font-size:70px;line-height:80px'><\/span><span style='font-size:25px'><sup style=              'top: -1.8em'><\/sup><\/span><\/label> ";
+htmldata += "";
+htmldata += "        <label class='col-xs-offset-4 col-sm-offset-4' style='line-height:40px;opacity:0.6'><span id='low' style='color:rgb(21,96,189);font-size:14px'><\/span>";
+htmldata += "         <span style='color:black'>|<\/span> <span id='high' style='color:green;font-size:14px'><\/span>";
+htmldata += "        <\/label>   ";
+htmldata += "";
+htmldata += "        <img src='images\/fb_icon.png' class='img-responsive pull-right' role='button' id='fb' width='32px'\/>";
+htmldata += "";
+htmldata += "    <\/section>   ";
+htmldata += "    <table class='table table-striped'>    ";
+htmldata += "    <tr>";
+htmldata += "    <td>Precipitation<\/td>";
+htmldata += "    <td id='far'>NA<\/td>    ";
+htmldata += "    <\/tr>";
+htmldata += "    <tr class='danger'>";
+htmldata += "    <td>Chance of Rain<\/td>";
+htmldata += "    <td>NA<\/td>    ";
+htmldata += "    <\/tr>    ";
+htmldata += "    <tr>";
+htmldata += "    <td>Wind Speed<\/td>";
+htmldata += "    <td>NA<\/td>    ";
+htmldata += "    <\/tr>";
+htmldata += "    <tr class='danger'>";
+htmldata += "    <td>Dew Point<\/td>";
+htmldata += "    <td>NA<\/td>     ";
+htmldata += "    <\/tr>     ";
+htmldata += "    <tr>";
+htmldata += "    <td>Humidity<\/td>";
+htmldata += "    <td>NA<\/td>     ";
+htmldata += "    <\/tr>";
+htmldata += "    <tr class='danger'>";
+htmldata += "    <td>Visibility<\/td>";
+htmldata += "    <td>NA<\/td>     ";
+htmldata += "    <\/tr> ";
+htmldata += "    <tr>";
+htmldata += "    <td>Sunrise<\/td>";
+htmldata += "    <td>NA<\/td>     ";
+htmldata += "        <\/tr>";
+htmldata += "    <tr class='danger'>";
+htmldata += "    <td>Sunset<\/td>";
+htmldata += "    <td>NA<\/td>     ";
+htmldata += "    <\/tr> ";
+htmldata += "    <\/table> ";
+htmldata += "    ";
+htmldata += "<\/div>";
+htmldata += "<\/section>";
+htmldata += "<!-- section for map -->   ";
+htmldata += "<section class='img-responsive col-lg-5' style='padding:0px;height:475px;' id='basicMap'>     ";
+htmldata += "<\/section>";
+htmldata += "<\/div>   <!-- Entrire tab -->   ";
+htmldata += "     ";
+htmldata += "<section class='col-lg-12 tab-pane' id='tab2' style='padding:0px;'>";
+htmldata += "<table class='table table-striped text-center' id='table2'>";
+htmldata += "    <tr style='background-color:#337ab7'>";
+htmldata += "        <th><label>Time<\/label><\/th>";
+htmldata += "        <th><label>Summary<\/label><\/th>";
+htmldata += "        <th><label>Cloud Cover<\/label><\/th>";
+htmldata += "        <th><label>Temp (<span id='temdeg'><\/span>) <\/label><\/th>";
+htmldata += "        <th><label>View Details<\/label><\/th>    ";
+htmldata += "    <\/tr>";
+htmldata += "<\/table> ";
+htmldata += "<\/section>    ";
+htmldata += "    ";
+htmldata += "<section class='col-lg-12 tab-pane' id='tab3'>";
+htmldata += "   ";
+htmldata += "";
+htmldata += "<div class=' col-lg-1 col-lg-push-2  img-rounded text-center' data-toggle='modal' data-target='#mod1' role='button' id='col1' style='background-color:#337ab7;background-size:cover;margin:10px'>    ";
+htmldata += "<\/div>";
+htmldata += "  ";
+htmldata += "<div class='modal' id='mod1' tabindex='-1' role='dialog' aria-labelledby='modallabel'>";
+htmldata += "<div class='modal-dialog' role='document'>";
+htmldata += "<div class='modal-content'>";
+htmldata += "<div class='modal-header'>";
+htmldata += "<button type='button' class='close' data-dismiss='modal'>";
+htmldata += "<span >&times;<\/span>";
+htmldata += "<\/button>    ";
+htmldata += "<h4 <b>class='modal-title' id='modallabel'><\/h4>          ";
+htmldata += "<\/div> <!-- modal-header -->";
+htmldata += "    ";
+htmldata += "<div class= 'modal-body'>    ";
+htmldata += "<\/div>   <!-- modal-body --> ";
+htmldata += "";
+htmldata += "<div class='modal-footer'>";
+htmldata += "<button type='button' class='btn' data-dismiss='modal'>Close<\/button>   ";
+htmldata += "<\/div>  <!-- modal footer -->    ";
+htmldata += "<\/div>   <!-- modal-content --> ";
+htmldata += "<\/div>    <!-- modal-dialog-->";
+htmldata += "<\/div>    <!-- modal-->    ";
+htmldata += "    ";
+htmldata += "<div class='col-lg-1 col-lg-push-2  img-rounded text-center' data-toggle='modal' data-target='#mod2' role='button' id='col2' style='background-color:#FF4D4D;background-size:cover;margin:10px'> ";
+htmldata += "<\/div>";
+htmldata += "    ";
+htmldata += "";
+htmldata += "<div class='modal' id='mod2' tabindex='-1' role='dialog'>";
+htmldata += "<div class='modal-dialog' role='document'>";
+htmldata += "<div class='modal-content'>";
+htmldata += "<div class='modal-header'>";
+htmldata += "<button type='button' class='close' data-dismiss='modal'>";
+htmldata += "<span >&times;<\/span>";
+htmldata += "<\/button>    ";
+htmldata += "<h4 <b> class='modal-title'><\/h4>          ";
+htmldata += "<\/div> <!-- modal-header -->";
+htmldata += "    ";
+htmldata += "<div class= 'modal-body'>    ";
+htmldata += "<\/div>   <!-- modal-body --> ";
+htmldata += "";
+htmldata += "<div class='modal-footer'>";
+htmldata += "<button type='button' class='btn' data-dismiss='modal'>Close<\/button>   ";
+htmldata += "<\/div>  <!-- modal footer -->    ";
+htmldata += "<\/div>   <!-- modal-content --> ";
+htmldata += "<\/div>    <!-- modal-dialog-->";
+htmldata += "<\/div>    <!-- modal-->    ";
+htmldata += "        ";
+htmldata += "    ";
+htmldata += "<div class='col-lg-1 col-lg-push-2  img-rounded text-center' data-toggle='modal' data-target='#mod3' role='button' id='col3' style='background-color:#F4A460;background-size:cover;margin:10px'>";
+htmldata += "<\/div>";
+htmldata += "";
+htmldata += "";
+htmldata += "<div class='modal' id='mod3' tabindex='-1' role='dialog' aria-labelledby='modallabel'>";
+htmldata += "<div class='modal-dialog' role='document'>";
+htmldata += "<div class='modal-content'>";
+htmldata += "<div class='modal-header'>";
+htmldata += "<button type='button' class='close' data-dismiss='modal'>";
+htmldata += "<span >&times;<\/span>";
+htmldata += "<\/button>    ";
+htmldata += "<h4 <b> class='modal-title' ><\/h4>          ";
+htmldata += "<\/div> <!-- modal-header -->";
+htmldata += "    ";
+htmldata += "<div class= 'modal-body'>    ";
+htmldata += "<\/div>   <!-- modal-body --> ";
+htmldata += "";
+htmldata += "<div class='modal-footer'>";
+htmldata += "<button type='button' class='btn' data-dismiss='modal'>Close<\/button>   ";
+htmldata += "<\/div>  <!-- modal footer -->    ";
+htmldata += "<\/div>   <!-- modal-content --> ";
+htmldata += "<\/div>    <!-- modal-dialog-->";
+htmldata += "<\/div>    <!-- modal-->    ";
+htmldata += "        ";
+htmldata += "    ";
+htmldata += "<div class='col-lg-1 col-lg-push-2 img-rounded text-center' data-toggle='modal' data-target='#mod4' role='button' id='col4' style='background-color:#81AC2A;background-size:cover;margin:10px'>";
+htmldata += "<\/div>";
+htmldata += "    ";
+htmldata += "";
+htmldata += "<div class='modal' id='mod4' tabindex='-1' role='dialog' aria-labelledby='modallabel'>";
+htmldata += "<div class='modal-dialog' role='document'>";
+htmldata += "<div class='modal-content'>";
+htmldata += "<div class='modal-header'>";
+htmldata += "<button type='button' class='close' data-dismiss='modal'>";
+htmldata += "<span >&times;<\/span>";
+htmldata += "<\/button>    ";
+htmldata += "<h4 <b> class='modal-title' ><\/h4>           ";
+htmldata += "<\/div> <!-- modal-header -->";
+htmldata += "    ";
+htmldata += "<div class= 'modal-body'>    ";
+htmldata += "<\/div>   <!-- modal-body --> ";
+htmldata += "";
+htmldata += "<div class='modal-footer'>";
+htmldata += "<button type='button' class='btn' data-dismiss='modal'>Close<\/button>   ";
+htmldata += "<\/div>  <!-- modal footer -->    ";
+htmldata += "<\/div>   <!-- modal-content --> ";
+htmldata += "<\/div>    <!-- modal-dialog-->";
+htmldata += "<\/div>    <!-- modal-->    ";
+htmldata += "        ";
+htmldata += "";
+htmldata += "<div class='col-lg-1 col-lg-push-2 img-rounded text-center' data-toggle='modal' data-target='#mod5' role='button' id='col5' style='background-color:#a862ea;background-size:cover;margin:10px'>  ";
+htmldata += "<\/div>";
+htmldata += "    ";
+htmldata += "";
+htmldata += "<div class='modal' id='mod5' tabindex='-1' role='dialog' aria-labelledby='modallabel'>";
+htmldata += "<div class='modal-dialog' role='document'>";
+htmldata += "<div class='modal-content'>";
+htmldata += "<div class='modal-header'>";
+htmldata += "<button type='button' class='close' data-dismiss='modal'>";
+htmldata += "<span >&times;<\/span>";
+htmldata += "<\/button>    ";
+htmldata += "<h4 <b> class='modal-title' ><\/h4>  ";
+htmldata += "<\/div> <!-- modal-header -->";
+htmldata += "    ";
+htmldata += "<div class= 'modal-body'>    ";
+htmldata += "<\/div>   <!-- modal-body --> ";
+htmldata += "";
+htmldata += "<div class='modal-footer'>";
+htmldata += "<button type='button' class='btn' data-dismiss='modal'>Close<\/button>   ";
+htmldata += "<\/div>  <!-- modal footer -->    ";
+htmldata += "<\/div>   <!-- modal-content --> ";
+htmldata += "<\/div>    <!-- modal-dialog-->";
+htmldata += "<\/div>    <!-- modal-->    ";
+htmldata += "        ";
+htmldata += "";
+htmldata += "<div class='col-lg-1 col-lg-push-2 img-rounded text-center' data-toggle='modal' data-target='#mod6' role='button' id='col6' style='background-color:#FA8072;background-size:cover;margin:10px'>  ";
+htmldata += "<\/div>";
+htmldata += "    ";
+htmldata += "";
+htmldata += "<div class='modal' id='mod6' tabindex='-1' role='dialog' aria-labelledby='modallabel'>";
+htmldata += "<div class='modal-dialog' role='document'>";
+htmldata += "<div class='modal-content'>";
+htmldata += "<div class='modal-header'>";
+htmldata += "<button type='button' class='close' data-dismiss='modal'>";
+htmldata += "<span >&times;<\/span>";
+htmldata += "<\/button>    ";
+htmldata += "<h4 <b> class='modal-title' ><\/h4>           ";
+htmldata += "<\/div> <!-- modal-header -->";
+htmldata += "    ";
+htmldata += "<div class= 'modal-body'>    ";
+htmldata += "<\/div>   <!-- modal-body --> ";
+htmldata += "";
+htmldata += "<div class='modal-footer'>";
+htmldata += "<button type='button' class='btn' data-dismiss='modal'>Close<\/button>   ";
+htmldata += "<\/div>  <!-- modal footer -->    ";
+htmldata += "<\/div>   <!-- modal-content --> ";
+htmldata += "<\/div>    <!-- modal-dialog-->";
+htmldata += "<\/div>    <!-- modal-->    ";
+htmldata += "        ";
+htmldata += "    ";
+htmldata += "<div class='col-lg-1 col-lg-push-2 img-rounded text-center' data-toggle='modal' data-target='#mod7' role='button' id='col7'  style='background-color:#DB7093;background-size:cover;margin:10px'> ";
+htmldata += "<\/div>";
+htmldata += "    ";
+htmldata += "";
+htmldata += "<div class='modal' id='mod7' tabindex='-1' role='dialog' aria-labelledby='modallabel'>";
+htmldata += "<div class='modal-dialog' role='document'>";
+htmldata += "<div class='modal-content'>";
+htmldata += "<div class='modal-header'>";
+htmldata += "<button type='button' class='close' data-dismiss='modal'>";
+htmldata += "<span >&times;<\/span>";
+htmldata += "<\/button>    ";
+htmldata += "<h4 <b> class='modal-title' ><\/h4>           ";
+htmldata += "<\/div> <!-- modal-header -->";
+htmldata += "    ";
+htmldata += "<div class= 'modal-body'>    ";
+htmldata += "<\/div>   <!-- modal-body --> ";
+htmldata += "";
+htmldata += "<div class='modal-footer'>";
+htmldata += "<button type='button' class='btn' data-dismiss='modal'>Close<\/button>   ";
+htmldata += "<\/div>  <!-- modal footer -->    ";
+htmldata += "<\/div>   <!-- modal-content --> ";
+htmldata += "<\/div>    <!-- modal-dialog-->";
+htmldata += "<\/div>    <!-- modal-->    ";
+htmldata += "";
+htmldata += "<br><br><br><br>";
+htmldata += "<\/section>";
+htmldata += "        ";
+htmldata += "<\/div>   <!-- Closing of tab content -->  ";
+htmldata += "    ";
+htmldata += "<\/div>";
+htmldata += "<\/div>";
+   
+    
+    
+    
+$(document).ready( function() {
+              
+       $("#resultsec").hide();
+    
+       
+       $("form").submit(function(event){
+
+         $("#resultsec").empty();  
+         $("#resultsec").append(htmldata);
+         $("#resultsec").attr("style","opacity:0.0");   
+       
+            
+         var address = $("#inpstreet").val();
+         var city =  $("#inpcity").val();  
+         var state = $("#inpstate option:selected").text();
+         var statval = $("#inpstate option:selected").val();  
+         var degree = $("input[type='radio'][name='degree']:checked").val();
+        
+         
+            
+    var xajax =  $.ajax ({
+              
+             url : "sample.php",
+             type:  'GET',
+             data: {
+                 street: address,
+                 city: city,
+                 state: state,
+                 valstate: statval,
+                 degree: degree   
+             },  
+              
+              dataType: 'json',
+              success: function(output) {
+                parse(output);
+                 
+             }
+           
+              
+          });
+           
+          event.preventDefault();
+       });
+    
+    });
+    
+    
+    function parse(data) {
+        
+        
+      //To show the result data    
+      if( $("form").valid() ) {
+          $("#resultsec").show();   
+      }
+       
+         
+         var address = $("#inpstreet").val();
+         var city =  $("#inpcity").val();  
+         var state = $("#inpstate option:selected").text();
+         var statval = $("#inpstate option:selected").val();  
+         var degree = $("input[type='radio'][name='degree']:checked").val();
+        
+        //Decode the json data
+        var $weatherdata = $.parseJSON(data,true);   
+        
+        //code for map 
+        var lat = $weatherdata['latitude'];
+        var lon = $weatherdata['longitude'];
+        var map = new OpenLayers.Map("basicMap");
+        var mapnik = new OpenLayers.Layer.OSM();
+		var layer_cloud = new OpenLayers.Layer.XYZ(
+        		"clouds",
+        		"http://${s}.tile.openweathermap.org/map/clouds/${z}/${x}/${y}.png",
+        	{
+           		isBaseLayer: false,
+            	opacity: 0.5,
+            	sphericalMercator: true
+       		}
+    	);
+		var layer_precipitation = new OpenLayers.Layer.XYZ(
+				"precipitation",
+				"http://${s}.tile.openweathermap.org/map/precipitation/${z}/${x}/${y}.png",
+			{
+				isBaseLayer: false,
+				opacity: 0.5,
+				sphericalMercator: true
+			}
+		);
+		map.addLayers([mapnik, layer_precipitation, layer_cloud]);
+      	map.addControl(new OpenLayers.Control.LayerSwitcher());     
+    
+  	    var lonlat = new OpenLayers.LonLat(lon,lat).transform(
+            new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+            map.getProjectionObject() // to Spherical Mercator Projection
+          );
+       	map.setCenter(lonlat,8);		
+		
+		var markers = new OpenLayers.Layer.Markers( "Markers" );
+        map.addLayer(markers);
+        markers.addMarker(new OpenLayers.Marker(lonlat));
+		
+		$("#basicMap").append("<br><br>")
+        
+        //first tab code
+        $weathericon = $weatherdata['currently']['icon'];
+        
+        switch($weathericon) {
+            
+        case "clear-day": $weathericon= "clear.png";
+                           break;
+            
+        case "clear-night" : $weathericon= "clear_night.png";
+                           break;
+            
+        case "rain" :      $weathericon= "rain.png";
+                           break;
+            
+        case "snow" :      $weathericon= "snow.png";
+                           break;
+        
+        case "sleet" :     $weathericon= "sleet.png";
+                           break;
+            
+        case "wind" :      $weathericon= "wind.png";
+                           break;
+        
+        case "fog" :       $weathericon= "fog";
+                           break;
+            
+        case "cloudy":    $weathericon= "cloudy.png";
+                           break;
+            
+        case "partly-cloudy-day" : $weathericon= "cloud_day.png";
+                           break;
+            
+        case "partly-cloudy-night" : $weathericon= "cloud_night.png";
+                           break;       
+    }
+        
+        fbimage = $weathericon;
+        
+        $wcondition =  $weatherdata['currently']['summary'];
+        $infotext = $wcondition + " in " + city + ", " + statval;
+            
+        $weathermes= $wcondition;
+        $weathericon = "images/" + $weathericon;
+        $("#weathericon").attr("src",  $weathericon);
+        $("#weathericon").attr("title",$weathermes);
+        
+        $("#infotext").text($infotext);
+        
+        $wtemperature = $weatherdata['currently']['temperature'];
+        $wtemperature = parseInt($wtemperature);    
+        if (degree == "Fahrenheit") {
+              $tempsymb = "\u00B0" + " F";    
+          }
+          else {
+               
+              $tempsymb = "\u00B0" + " C";
+          }  
+        
+          //tempearture
+          $lowtemp = $weatherdata['daily']['data'][0]['temperatureMin'];
+          $lowtemp = parseInt($lowtemp);
+          $lowsym  = "L: " + $lowtemp + "\u00B0";
+          $hightemp = $weatherdata['daily']['data'][0]['temperatureMax'];
+          $hightemp = parseInt($hightemp);
+          $highsym = " H: " + $hightemp + "\u00B0";
+          
+        
+         $("#temp").text($wtemperature);
+         $("sup").text($tempsymb);
+         $("#low").text($lowsym);
+         $("#high").text($highsym);
+         
+        
+        
+        
+        //Precipition value
+        var $wprecipitation =  $weatherdata['currently']['precipIntensity'];
+        if( degree == "Celsius") {
+            $wprecipitation = $wprecipitation / 25.4;  
+        }
+        
+        switch(true) {      
+                
+        case (0 <= $wprecipitation && $wprecipitation < 0.002):
+                        $wprecipitation = "None";
+                        break;
+            
+        case ($wprecipitation >= 0.002 && $wprecipitation < 0.017) :     $wprecipitation = "Very Light";
+                        break;
+            
+        case ($wprecipitation >= 0.017 && $wprecipitation < 0.1) :     $wprecipitation = "Light";
+                        break;
+            
+        case ($wprecipitation >= 0.1 && $wprecipitation < 0.4)   :       $wprecipitation = "Moderate";
+                        break;
+            
+        case ($wprecipitation >=0.4):       $wprecipitation = "Heavy";
+                                            break;
+        }
+         $("table tr:nth-child(1) td:nth-child(2)").text($wprecipitation);
+       
+        //percentage for rain 
+        $wrain  = $weatherdata['currently']['precipProbability'];
+        $wrain  = parseInt($wrain * 100 );
+        $wrain += "%";
+        $("table tr:nth-child(2) td:nth-child(2)").text($wrain);
+        
+         //wind speed
+         $windspeed = $weatherdata['currently']['windSpeed']; 
+         $windspeed = $windspeed.toFixed(2);
+         if (degree == "Fahrenheit") {
+         $windspeed =   $windspeed + " mph";
+         }
+         else {
+          $windspeed =   $windspeed + " m/s"; 
+         }
+         $("table tr:nth-child(3) td:nth-child(2)").text($windspeed);
+        
+         
+          //dewpoint
+          $dewpoint = $weatherdata['currently']['dewPoint'];
+          $dewpoint = $dewpoint.toFixed(2);
+          if (degree == "Fahrenheit") {
+          $dewpoint = $dewpoint + "\u00B0" + " F";    
+          }
+          else {
+          $dewpoint = $dewpoint + "\u00B0"  + " C";    
+          }
+          $("table tr:nth-child(4) td:nth-child(2)").text($dewpoint);
+         
+        
+          
+         //humidity
+         $humidity  = $weatherdata['currently']['humidity'];
+         $humidity  = ($humidity * 100 );
+         $humidity  = parseInt($humidity);
+         $humidity += "%";
+         $("table tr:nth-child(5) td:nth-child(2)").text($humidity);  
+        
+        
+         //visibility
+         $visibility = $weatherdata['currently']['visibility']; 
+         $visibility  = $visibility.toFixed(2);
+        
+          if (degree == "Fahrenheit") {
+              $visibility += " mi"; 
+          }
+          else {
+              $visibility += " km";  
+          }  
+          $("table tr:nth-child(6) td:nth-child(2)").text($visibility);
+        
+          $timezone = $weatherdata['timezone'];
+          $risetime = $weatherdata['daily']['data'][0]['sunriseTime'];
+          rise  = convert($risetime,$timezone);         
+          $("table tr:nth-child(7) td:nth-child(2)").text(rise);
+        
+        
+          $settime = $weatherdata['daily']['data'][0]['sunsetTime']; 
+          set= convert($settime,$timezone);
+          $("table tr:nth-child(8) td:nth-child(2)").text(set); 
+        
+            $("#resultsec").attr("style","opacity:1.0");   
+    
+            // second tab code    
+            $("#temdeg").text($tempsymb);
+          
+             var time = new Array(); 
+             var image = new Array();
+             var cloud = new Array();
+             var temp  = new Array();
+             
+            //loop for running next 24 days data 
+            for(var i=1; i<25; i++) {     
+             time[i] = $weatherdata['hourly']['data'][i]['time']; 
+             time[i] = convert(time[i],$timezone);
+             
+             image[i] = $weatherdata['hourly']['data'][i]['icon'];  
+             
+             switch(image[i]) {
+            
+                case "clear-day":  image[i]= "clear.png";
+                                        break;
+
+                case "clear-night" : image[i]= "clear_night.png";
+                                    break;
+
+                case "rain" :      image[i]= "rain.png";
+                                    break;
+
+                case "snow" :      image[i]= "snow.png";
+                                   break;
+
+                case "sleet" :     image[i]= "sleet.png";
+                                   break;
+
+                case "wind" :      image[i]= "wind.png";
+                                   break;
+
+                case "fog" :       image[i]= "fog";
+                                   break;
+
+                case "cloudy":    image[i]= "cloudy.png";
+                                   break;
+
+                case "partly-cloudy-day" : image[i]= "cloud_day.png";
+                                   break;
+
+                case "partly-cloudy-night" : image[i]= "cloud_night.png";
+                                   break;       
+             }   
+             imag  = "images/"+image[i];  
+                
+             cloud[i] =  $weatherdata['hourly']['data'][i]['cloudCover'];
+             cloud[i] =  parseInt(cloud[i] * 100);   
+             cloud[i] += "%"; 
+            
+             temp[i] =  $weatherdata['hourly']['data'][i]['temperature'];     
+             
+             wi  = $weatherdata['hourly']['data'][i]['windSpeed'];  
+             wi = wi.toFixed(2);    
+             if (degree == "Fahrenheit") {
+                    wi += " mph";
+             }
+             else {
+                    wi += " m/s"; 
+             }     
+             
+             hum = $weatherdata['hourly']['data'][i]['humidity'];
+             hum = parseInt(hum * 100);
+             hum +="%";    
+                 
+             vis  = $weatherdata['hourly']['data'][i]['visibility'];    
+             if(degree == "Fahrenheit") {
+                    vis += " mi"; 
+                }
+                else {
+                    vis += " km";  
+              }       
+                 
+              pres = $weatherdata['hourly']['data'][i]['pressure']; 
+              if(degree == "Fahrenheit") {
+                    pres += " mb"; 
+                }
+                else {
+                    pres += " hPa";  
+                }         
+                 
+             rw = "#rw"+i;
+             rc = "rw"+i;
+                 
+             row = "<tr style='background-color:white;height:100px;border:1px solid lightgrey'>";
+             row+=  "<td>" + time[i] + "</td>";
+             row += "<td><img src=" +imag+ " width='60px' class='img-responsive center-block' style='float:none'/></td>";
+             row += "<td>" + cloud[i] + "</td>"; 
+             row += "<td>" + temp[i] + "</td>"; 
+             row += "<td> <span class='glyphicon glyphicon-plus center-block' role='button' data-toggle='collapse' style='color:#337ab7' href="                 +rw+"></span></td>";     
+             row += "</tr>";      
+             row += "<tr class='collapse table'id="+rc+"><td colspan='5'>";
+             row += "<table class='table'><tr>";    
+             row += "<th>Wind</th>";  
+             row += "<th>Humidity</th>";  
+             row += "<th>Visibility</th>";      
+             row += "<th>Pressure</th></tr>";
+             row += "<tr style='background-color:#F8F8F8'><td>"+wi+"</td><td>"+hum+"</td><td>"+vis+"</td><td>"+pres+"</td> </tr>";   
+             row+="</table></td></tr>";    
+     
+             $("#table2").append(row);                                                                              
+           }
+            
+        
+                 
+            // third tab code
+            var time3 =new Array();
+            var image = new Array();  
+            for(var i=1 ; i<8 ; i++) {
+                
+                time3[i]=$weatherdata['daily']['data'][i]['time']; 
+                var day = moment.unix(time3[i]).format("dddd");
+                var date= moment.unix(time3[i]).format("MMM DD");
+                
+                 image[i] = $weatherdata['daily']['data'][i]['icon']; 
+                
+                 switch(image[i]) {
+            
+                case "clear-day":  image[i]= "clear.png";
+                                        break;
+
+                case "clear-night" : image[i]= "clear_night.png";
+                                    break;
+
+                case "rain" :      image[i]= "rain.png";
+                                    break;
+
+                case "snow" :      image[i]= "snow.png";
+                                   break;
+
+                case "sleet" :     image[i]= "sleet.png";
+                                   break;
+
+                case "wind" :      image[i]= "wind.png";
+                                   break;
+
+                case "fog" :       image[i]= "fog";
+                                   break;
+
+                case "cloudy":    image[i]= "cloudy.png";
+                                   break;
+
+                case "partly-cloudy-day" : image[i]= "cloud_day.png";
+                                   break;
+
+                case "partly-cloudy-night" : image[i]= "cloud_night.png";
+                                   break;       
+             }   
+                 imag  = "images/"+image[i];
+                 imagefb= image[i];
+                
+                
+                 var min = $weatherdata['daily']['data'][i]['temperatureMin'];
+                 min = parseInt(min);
+                 min += "\u00B0";
+                
+                 var max = $weatherdata['daily']['data'][i]['temperatureMax'];
+                 max = parseInt(max);
+                 max += "\u00B0";
+                
+                var colid = "colid"+i; 
+                var coldata = "<div id="+colid+"><label style='margin-bottom:5px'>"+day+"</label><br>";
+                coldata += "<label>"+date+"</label>";
+                coldata += "<img src="+imag+" width='70px' class='img-responsive center-block' style='float:none'/>";
+                coldata += "<label style='font-size:12px;margin-bottom:0px'> Min</label><br>";
+                coldata += "<label style='font-size:12px'> Temp </label>";
+                coldata += "<p style='font-size:30px;margin-bottom:0px'><label>" + min + "</label></p>";
+                coldata += "<label style='font-size:12px;margin-bottom:0px'>Max</label><br>";
+                coldata += "<label style='font-size:12px'> Temp </label>";
+                coldata += "<p style='font-size:30px'><label>" + max + "</label></p></div>";
+                
+                $('#col'+i).append(coldata);
+                
+                
+                heading = "Weather in " + city + " on " + date; 
+                $('#mod'+i+' .modal-header h4').text(heading);
+                
+                summary = $weatherdata['daily']['data'][i]['summary'];
+                sunrise = $weatherdata['daily']['data'][i]['sunriseTime'];
+                sunrise =  convert(sunrise,$timezone);
+                
+                sunst = $weatherdata['daily']['data'][i]['sunsetTime'];
+                sunst = convert(sunst,$timezone);
+                
+                humidity = $weatherdata['daily']['data'][i]['humidity'];
+                humidity = parseInt(humidity * 100);
+                humidity += "%";
+                
+                wind = $weatherdata['daily']['data'][i]['windSpeed'];
+                wind = wind.toFixed(2);
+                if (degree == "Fahrenheit") {
+                    wind += " mph";
+                }
+                else {
+                    wind += " m/s"; 
+                }
+                
+                visibility = $weatherdata['daily']['data'][i]['visibility'];
+                if (typeof visibility === "undefined") {
+                    visibility = "NA";
+                }
+                else if(degree == "Fahrenheit") {
+                    visibility += " mi"; 
+                }
+                else {
+                    visibility += " km";  
+                }  
+              
+                pressure =  $weatherdata['daily']['data'][i]['pressure'];
+                if(degree == "Fahrenheit") {
+                    pressure += " mb"; 
+                }
+                else {
+                    pressure += " hPa";  
+                }  
+                
+                
+               
+                bdy= "<br><img src="+imag+" width='130px' class='img-responsive center-block' style='float:none'/>";
+                bdy += "<h3 class='text-center'><b>"+day+": <span style='color:#F4A460'>" + summary + "</span></b></h3>";
+                bdy += "<div class='row'><div class='col-xs-12 col-xs-offset-4 col-sm-4 col-sm-offset-1'><h4><b> Sunrise Time </b></h4>          <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+sunrise+"</p></div>";
+                bdy+= "<div class='col-xs-12 col-xs-offset-4 col-sm-4 col-sm-offset-0 '><h4><b> Sunset Time </b></h4><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+sunst+"</p></div>";
+                bdy+= "<div class='col-xs-12 col-xs-offset-4 col-sm-3 col-sm-offset-0 '><h4><b> Humidity </b></h4><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+humidity+"</p></div></div>";
+                bdy += "<div class='row'><div class='col-xs-12 col-xs-offset-4 col-sm-4 col-sm-offset-1'><h4><b> Wind Speed </b></h4>          <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+wind+"</p></div>";
+                bdy+= "<div class='col-xs-12 col-xs-offset-4 col-sm-4 col-sm-offset-0'><h4><b>&nbsp; Visibility </b></h4><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+visibility+"</p></div>";
+                bdy+= "<div class='col-xs-12 col-xs-offset-4 col-sm-3 col-sm-offset-0 '><h4><b> Pressure </b></h4><p>&nbsp;&nbsp;"+pressure+"</p></div></div>";
+                $('#mod'+i+' .modal-body').append(bdy);
+            }
+
+        
+           // code for facebook integration
+            $("#fb").click(function () {
+                
+                FB.getLoginStatus( function (response){
+                 
+                    if(response.status == "connected") {
+                        console.log('user is already connected');
+                        var uid = response.authResponse.userID;
+                        var accessToken = response.authResponse.accessToken;
+                        
+                        FB.ui({
+                        method: 'feed',
+                        description: $weathermes + ', '+$wtemperature + $tempsymb,    
+                        caption: 'WEATHER INFORMATION FROM FORCAST.IO', 
+                        name: 'Current Weather in ' + city + ', ' + statval,  
+                        picture: 'http://cs-server.usc.edu:45678/hw/hw8/images/'+fbimage,  
+                        display: 'popup', 
+                        link: "http://www.forecast.io",    
+                        }, function(response){
+                        
+                             if(response &&response.post_id) {
+                              
+                                 alert("Posted successfully");
+                             }
+                            else {
+                                
+                                alert("Not posted");   
+                            }
+                        
+                        });
+                    }
+                    else if (response.status == 'not_authorized') {
+                        
+                        console.log('user is logged in but not authenticated the app');
+                    }
+                    else {
+                        FB.login( function(respo) {
+                        
+                            if(respo.authResponse){
+                             
+                                FB.api('/me', function(response) {
+                                console.log('Good to see you, ' + response.name + '.');
+                                });
+                                console.log('user '+respo.name+" logged in successfully");
+                            }
+                            else{
+                             
+                                console.log('user is not authenticated');
+                            }
+                        });
+                    }
+                });
+                
+                
+
+            }); // button click function
+        
+        
+            
+}   
+    
+    
+function convert(data,time) {
+     var rise =     moment.unix(data).format("YYYY-MM-DD hh:mm");
+     var sym =      moment.unix(data).format("A");
+     var local   =  moment.tz(rise, "America/Los_Angeles");
+     var other  =   local.clone().tz(time);
+     var  t     =   other.format("hh:mm");
+     t += " " + sym;
+     return t;
+}
+    
+    
+</script>
+
+    
+<br>
+<hr>
+    
+<div id="resultsec" class= "row">    
+
+</body>
+</html>
+
+    
