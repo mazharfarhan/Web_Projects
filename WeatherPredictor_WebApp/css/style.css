@@ -1,0 +1,136 @@
+.bg{
+    background: url("../images/bg.jpg") no-repeat fixed; 
+    background-size:cover;    
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover; 
+     background-color: transparent;
+}
+
+h1{
+   text-align: center;
+}
+
+.star{
+    color:red;
+}
+
+img {
+    
+  float:right;
+}
+
+label{
+   color: white;
+}
+
+.degree {
+    margin-top: 10px;
+}
+
+.maindiv {
+    background: rgba(54,54,54,0.2);
+    background-size:cover;
+}
+
+section {
+    padding: 13px;
+}
+
+a{
+    color:black;
+    text-decoration: none;
+}
+
+label.error {
+    color:rgba(255,0,0,0.7);
+}
+
+.col-lg-2,.col-lg-3,.col-md-2,.col-md-3 {
+   padding-left: 0px;   
+    
+}
+
+
+.btn:focus {
+    outline: none;
+}
+
+#table2 th {
+    text-align: center;
+}
+
+.nav-tabs {
+    border-bottom: 0px;
+}
+
+.nav-tabs a {
+background-color: #E8E8E8;
+}
+
+.nav-tabs label {
+color: #337ab7;
+}
+
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover,
+.nav-tabs > li.active > a:focus {
+    background-color: #337ab7;
+}
+
+.nav-tabs > li.active > a > label {
+    color: white;
+}
+
+
+@media (max-width: 1200px) {
+ 
+    .img-rounded {
+        border-radius: 40px;  
+        
+    }
+    
+    #tab3 {
+    
+        background-color: none;
+    }
+    
+}
+
+
+@media (min-width:1200px) {
+    
+   #tab3 {
+    
+       padding:0px;
+       background-color:#404040;
+       background-size:cover";
+       
+   }
+}
+
+@media (max-width:778px) {
+ 
+    #weathericon {
+
+        width:160px;
+        
+    }
+
+}
+
+@media (min-width:778px) {
+ 
+    #weathericon {
+
+        width:130px;
+        
+    }
+
+}
+
+#col1 {
+ 
+    all: default;
+}
+
